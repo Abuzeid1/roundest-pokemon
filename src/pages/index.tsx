@@ -37,7 +37,7 @@ const Home: NextPage = (props) => {
         <br />
         <div className="flex p-16 justify-center  items-center max-w-2xl rounded border">
           <div className="w-64 h-64 flex flex-col items-center">
-            <Image width={256} height={256} src={firstPokemon.data?.sprites.front_default} className="w-full mt-[-2rem] " alt="pokemon" />
+            <Image width={256} height={256} src={firstPokemon.data?.spriteUrl} className="w-full mt-[-2rem] " alt="pokemon" />
             <div className="text-center capitalize " >{firstPokemon.data?.name}</div>
             <button className={btnClass} onClick={(e) => {
               e.preventDefault()
@@ -46,7 +46,7 @@ const Home: NextPage = (props) => {
           </div>
           <div className="p-8"> vs</div>
           <div className="w-64 h-64 flex flex-col items-center">
-            <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.sprites.front_default} alt="pokemon" />
+            <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.spriteUrl} alt="pokemon" />
             <div className="text-center capitalize" >{secondPokemon.data?.name}</div>
             <button className={btnClass} onClick={() => voteForRoundest(secondId)} > rounder</button>
           </div>
