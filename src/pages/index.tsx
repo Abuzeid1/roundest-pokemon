@@ -1,6 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import Image from "next/future/image"
+import Link from "next/link";
 
 import { getOptionsForVote, getRandomPokemon } from "../utils/getRandomPokemon";
 import { trpc } from "../utils/trpc";
@@ -15,7 +16,7 @@ const Home: NextPage = (props) => {
   const secondPokemon = trpc.pokemonId.useQuery({ id: secondId })
   if (firstPokemon.isLoading || secondPokemon.isLoading) return null;
 
-
+  const isLoaded = !firstPokemon.isLoading && firstPokemon.data && !secondPokemon.isLoading && secondPokemon.data
 
   const voteForRoundest: (num: number) => (any) = (num) => {
     if (num === firstId) {
@@ -30,12 +31,12 @@ const Home: NextPage = (props) => {
   return (
     <>
 
-      <main className="flex flex-col w-screen h-screen items-center justify-center ">
-        <div className="text-center"> which pokémon is rounder</div>
+      <main className=" flex flex-col w-screen h-screen items-center justify-center ">
+        <div className="mt-auto text-center"> which pokémon is rounder</div>
         <br />
         <br />
         <div className="flex p-16 justify-center  items-center max-w-2xl rounded border">
-          <div className="w-64 h-64 flex flex-col items-center">
+          {isLoaded && <><div className="w-64 h-64 flex flex-col items-center">
             <Image width={256} height={256} src={firstPokemon.data?.spriteUrl as string} className="w-full mt-[-2rem] " alt="pokemon" />
             <div className="text-center capitalize " >{firstPokemon.data?.name}</div>
             <button className={btnClass} onClick={(e) => {
@@ -43,14 +44,19 @@ const Home: NextPage = (props) => {
               voteForRoundest(firstId)
             }} >Rounder</button >
           </div>
-          <div className="p-8"> vs</div>
-          <div className="w-64 h-64 flex flex-col items-center">
-            <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.spriteUrl as string} alt="pokemon" />
-            <div className="text-center capitalize" >{secondPokemon.data?.name}</div>
-            <button className={btnClass} onClick={() => voteForRoundest(secondId)} > rounder</button>
-          </div>
+            <div className="p-8"> vs</div>
+            <div className="w-64 h-64 flex flex-col items-center">
+              <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.spriteUrl as string} alt="pokemon" />
+              <div className="text-center capitalize" >{secondPokemon.data?.name}</div>
+              <button className={btnClass} onClick={() => voteForRoundest(secondId)} > rounder</button>
+            </div> </>}
+          {!isLoaded && <div> loading... </div>}
 
         </div>
+        <Link href="/results">
+          <a className="mt-auto pb-2">Results</a>
+        </Link>
+
       </main>
     </>
   )

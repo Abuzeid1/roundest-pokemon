@@ -8,10 +8,18 @@ export default function ResultPage(props) {
         <h1 className="text-center pb-8">Results</h1>
 
         {props.pokemonOrderedBy.map(el => {
+
             return (
-                <div className="flex items-center content-center justify-center max-w-2xl border p-2 ">
-                    <Image src={el.spriteUrl} width="200" height="200" alt="" />
-                    <h2 className="text-2xl"> {el.name}</h2>
+                <div className="flex items-center content-center justify-between max-w-2xl border p-2 px-7">
+                    <div className="flex items-center">
+
+                        <Image src={el.spriteUrl} width="200" height="200" alt="" />
+                        <h2 className="text-2xl capitalize"> {el.name}</h2>
+                    </div>
+                    <div>{el._count.VoteFor | 0}</div>
+                    <div>{el._count.Voteagainst | 0}</div>
+
+                    <div>{((((el._count.VoteFor | 0) / ((el._count.Voteagainst | 0) + (el._count.VoteFor | 0)))) * 100).toFixed()}%</div>
                 </div>
             )
         })}</div>
