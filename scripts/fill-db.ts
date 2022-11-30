@@ -10,9 +10,9 @@ const doBackfill = async () => {
         name: (p as {name:string}).name,
         spriteUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
     }))
-    console.log("pokemon?", allPokemon)
+
     const creation = formattedPokemon.forEach( async (el) => {
-        console.log(el)
+
 
         await prisma.pokemon.create({
             data:el,

@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import Image from "next/future/image"
+import Image from "next/image"
 import Link from "next/link";
 
 import { getOptionsForVote, getRandomPokemon } from "../utils/getRandomPokemon";
@@ -54,8 +54,9 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
           {!isLoaded && <div> loading... </div>}
 
         </div>
-        <Link href="/results">
-          <a className="mt-auto pb-2">Results</a>
+        <Link className="mt-auto pb-2" href="/results">
+          Results
+
         </Link>
 
       </main>

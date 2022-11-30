@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../server/db/client";
-import Image from "next/future/image";
+import Image from "next/image";
 import { Pokemon } from "@prisma/client";
 
 
@@ -45,8 +45,8 @@ export const getStaticProps: GetServerSideProps = async () => {
             }
         }
     })
-    console.log(55)
-    console.log("I did it", pokemonOrderedBy)
+
+
 
     return { props: { pokemonOrderedBy }, revalidate: 60 }
 }
