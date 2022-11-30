@@ -1,8 +1,10 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../server/db/client";
 import Image from "next/future/image";
+import { Pokemon } from "@prisma/client";
 
-export default function ResultPage(props) {
+
+const ResultPage: NextPage<{ pokemonOrderedBy: (Pokemon)[] }> = (props) => {
 
     return <div className="p-5">
         <h1 className="text-center pb-8">Results</h1>
@@ -24,6 +26,7 @@ export default function ResultPage(props) {
             )
         })}</div>
 }
+export default ResultPage
 
 export const getStaticProps: GetServerSideProps = async () => {
     const pokemonOrderedBy = await prisma.pokemon.findMany({
