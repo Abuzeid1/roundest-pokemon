@@ -37,26 +37,30 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
         <br />
         <br />
         <div className="flex w-[95%] sm:p-16 py-8  sm:py-16 p-2 justify-center  items-center max-w-2xl rounded border">
-          <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
+          {/* first pokemon to choose from */}
+          {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
             <Image width={256} height={256} src={firstPokemon.data?.spriteUrl as string} className="w-full mt-[-2rem] " alt="pokemon" />
             <div className="text-center capitalize text-lg sm:text-xl" >{firstPokemon.data?.name}</div>
             <button className={btnClass} onClick={(e) => {
               e.preventDefault()
               voteForRoundest(firstId)
             }} >Rounder</button >
-          </div>
+
+          </div>}
+
           <div className="p-8"> vs</div>
-          <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
+
+          {/* second pokemon choice  */}
+          {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
             <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.spriteUrl as string} alt="pokemon" />
             <div className="text-center capitalize" >{secondPokemon.data?.name}</div>
             <button className={btnClass} onClick={() => voteForRoundest(secondId)} > rounder</button>
-          </div>
+          </div>}
 
 
         </div>
         <Link className="mt-auto pb-2" href="/results">
           Results
-
         </Link>
 
       </main>
