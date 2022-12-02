@@ -1,4 +1,4 @@
-import { PrismaClientValidationError } from "@prisma/client/runtime";
+
 import { PokemonClient } from "pokenode-ts";
 import { prisma } from "../src/server/db/client";
 
@@ -12,7 +12,10 @@ const doBackfill = async () => {
         spriteUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
     }))
 
-    return  prisma.pokemon.updateMany({data: formattedPokemon})
+    console.table(formattedPokemon)
+    await prisma.pokemon.deleteMany({})
+
+    return   prisma.pokemon.createMany({data: formattedPokemon})
     // const creation = formattedPokemon.forEach( async (el) => {
 
 

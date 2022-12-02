@@ -1,11 +1,13 @@
+
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import Image from "next/image"
 import Link from "next/link";
 
-import { getOptionsForVote, getRandomPokemon } from "../utils/getRandomPokemon";
+import { getOptionsForVote } from "../utils/getRandomPokemon";
 import { trpc } from "../utils/trpc";
-import { number } from "zod";
+import { Pokemon } from "@prisma/client";
+
 const btnClass = "mx-auto inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring:offset-2 focus:ring-indigo-500 mt-5"
 
 const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
@@ -19,7 +21,7 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
 
   const isLoaded = !firstPokemon.isLoading && firstPokemon.data && !secondPokemon.isLoading && secondPokemon.data
 
-  const voteForRoundest: (num: number) => (any) = (num) => {
+  const voteForRoundest: (num: number) => void = (num) => {
     if (num === firstId) {
       voteMutation.mutate({ votedFor: firstId, votedAgainst: secondId })
     }
@@ -38,7 +40,7 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
         <br />
         <div className="flex w-[95%] sm:p-16 py-8  sm:py-16 p-2 justify-center  items-center max-w-2xl rounded border">
           {/* first pokemon to choose from */}
-          {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
+          {/* {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
             <Image width={256} height={256} src={firstPokemon.data?.spriteUrl as string} className="w-full mt-[-2rem] " alt="pokemon" />
             <div className="text-center capitalize text-lg sm:text-xl" >{firstPokemon.data?.name}</div>
             <button className={btnClass} onClick={(e) => {
@@ -46,16 +48,20 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
               voteForRoundest(firstId)
             }} >Rounder</button >
 
-          </div>}
+          </div>} */}
+          <PokemonListing pokemon={firstPokemon.data} vote={voteForRoundest} disabled={isLoaded ? false : true} />
 
           <div className="p-8"> vs</div>
 
           {/* second pokemon choice  */}
-          {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
+
+          <PokemonListing pokemon={secondPokemon.data} vote={voteForRoundest} disabled={isLoaded ? false : true} />
+
+          {/* {isLoaded && <div className="sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center">
             <Image width={256} height={256} className="w-full mt-[-2rem] " src={secondPokemon.data?.spriteUrl as string} alt="pokemon" />
             <div className="text-center capitalize" >{secondPokemon.data?.name}</div>
             <button className={btnClass} onClick={() => voteForRoundest(secondId)} > rounder</button>
-          </div>}
+          </div>} */}
 
 
         </div>
@@ -70,6 +76,17 @@ const Home: NextPage<{ firstId: number, secondId: number }> = (props) => {
 
 export default Home
 
+const PokemonListing: React.FC<{ pokemon: Pokemon | undefined, vote: (num: number) => void, disabled: boolean }> = ({ pokemon, vote, disabled }) => {
+  return <div className={`sm:w-64 sm:h-64 w-40 h-50 flex flex-col items-center ${disabled && "opacity-0"}`}>
+    <Image width={256} height={256} src={pokemon?.spriteUrl as string} className="w-full mt-[-2rem] " alt="pokemon" />
+    <div className="text-center capitalize text-lg sm:text-xl" >{pokemon?.name}</div>
+    <button className={btnClass} onClick={(e) => {
+      e.preventDefault()
+      vote(1)
+    }} >Rounder</button >
+
+  </div>
+}
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const [firstId, secondId] = getOptionsForVote()
