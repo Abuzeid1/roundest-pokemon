@@ -52,7 +52,7 @@ const PokemonListing: React.FC<{ pokemon: Pokemon | undefined, vote: () => void,
     {disabled ? <Spinner /> : <div className={`w-[40%] flex flex-col items-center ${disabled && "opacity-0"} max-sm:w-[100%] max-sm:max-w-[15rem]`}>
       <div className="text-center capitalize text-lg sm:text-2xl">{pokemon?.name}</div>
 
-      <Image width={256} height={256} src={pokemon?.spriteUrl as string}
+      <Image width={256} height={256} placeholder={"empty"} src={pokemon?.spriteUrl as string}
 
         className="w-full" alt="pokemon" />
       <button className="mx-auto  px-2.5 py-1.5 border border-gray-300 shadow-sm max-sm:text-sm text-lg font-medium rounded-full text-gray-700 bg-white hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring:offset-2 focus:ring-indigo-500 mt-5" onClick={() => {
