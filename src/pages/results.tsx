@@ -1,6 +1,7 @@
 import { NextPage, InferGetServerSidePropsType } from "next";
 import { prisma } from "../server/db/client";
 import Image from "next/image";
+import { empty } from "@prisma/client/runtime";
 
 const ResultPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ pokemonScores }) => {
 
@@ -14,7 +15,7 @@ const ResultPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps
                     <li key={id} className="grid-cols-[1fr_1fr_.5fr] grid sm:grid-cols-[1.5fr_1fr_.5fr_.5fr_.5fr]  sm:gap-2 items-center text-left w-full max-w-2xl border sm:p-2 sm:px-7 mx-auto sm:text-2xl max-sm:text-sm relative">
 
                         <span className="absolute top-0 left-0 bg-gray-200 text-gray-700 p-2 max-sm:p-1 rounded-br-lg">{index + 1}</span>
-                        <Image src={spriteUrl} width="200" height="200" alt="" />
+                        <Image src={spriteUrl} placeholder="empty" width="200" height="200" alt="" />
                         <h2 className="capitalize"> {name}</h2>
 
                         <div className="sm:block hidden">{_count.VoteFor | 0}</div>
