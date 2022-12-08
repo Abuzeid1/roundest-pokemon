@@ -1,7 +1,7 @@
 import { NextPage, InferGetServerSidePropsType } from "next";
 import { prisma } from "../server/db/client";
 import Image from "next/image";
-import { empty } from "@prisma/client/runtime";
+
 
 const ResultPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ pokemonScores }) => {
 
