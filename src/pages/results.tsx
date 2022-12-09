@@ -3,7 +3,7 @@ import { prisma } from "../server/db/client";
 import Image from "next/image";
 
 
-const ResultPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ pokemonScores }) => {
+const ResultPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ pokemonScores }) => {
 
     return <div className="p-5 text-gray-50">
         <h1 className="text-center text-5xl my-10 ">Results</h1>
@@ -31,7 +31,7 @@ const ResultPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps
 export default ResultPage
 
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
     const pokemonCollection = await prisma.pokemon.findMany({
         orderBy: {
             VoteFor: { _count: "desc" }
@@ -57,6 +57,6 @@ export const getServerSideProps = async () => {
     })
     pokemonScores = pokemonScores.sort((a, b) => b.score - a.score || a.name.charCodeAt(0) - b.name.charCodeAt(0))
 
-    return { props: { pokemonScores } }
+    return { props: { pokemonScores }, revalidate: 60 }
 }
 

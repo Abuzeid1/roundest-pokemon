@@ -17,6 +17,7 @@ export const appRouter = router({
     if(!pokemonPair) throw new Error("lol doesn't exist")
     
     const [firstPokemon, secondPokemon] = pokemonPair
+
     return {firstPokemon, secondPokemon}
   }),
   
