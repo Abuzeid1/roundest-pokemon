@@ -23,19 +23,19 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <main className=" flex flex-col w-screen sm:h-screen items-center justify-center text-gray-50  ">
-        <div className="mt-7 max-sm:mb-7 text-center"> which pokémon is rounder</div>
+      <main className=" flex flex-col w-screen sm:h-screen min-h-[40rem] items-center justify-center text-gray-50  ">
+        <div className="mt-7 max-sm:mb-20 text-center"> which pokémon is rounder</div>
 
         <div className="flex w-[95%]  justify-between items-center max-w-xl mt-auto max-sm:flex-col">
 
           <PokemonListing pokemon={pokemonPair?.firstPokemon} vote={() => voteForRoundest(pokemonPair?.firstPokemon?.id)} disabled={isFetching} />
 
-          <div className="max-sm:py-5">vs</div>
+          <div className="max-sm:py-11">vs</div>
 
           <PokemonListing pokemon={pokemonPair?.secondPokemon} vote={() => voteForRoundest(pokemonPair?.secondPokemon?.id)} disabled={isFetching} />
 
         </div>
-        <Link className="mt-auto pb-7 max-sm:pt-4" href="/results">
+        <Link className="mt-auto pb-7 max-sm:pt-16" href="/results">
           Results
         </Link>
 
