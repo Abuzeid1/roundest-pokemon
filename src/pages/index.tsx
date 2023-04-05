@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
-import { Pokemon } from "@prisma/client";
+import type { Pokemon } from "@prisma/client";
 
 const Home: NextPage = () => {
   const voteMutation = trpc.pokemonVoteUpdate.useMutation();
