@@ -1,7 +1,6 @@
 // src/server/router/_app.ts
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import { exampleRouter } from "./example";
 
 import { PokemonClient } from "pokenode-ts";
 
@@ -9,7 +8,6 @@ import { getOptionsForVote } from "../../../utils/getRandomPokemon";
 const api = new PokemonClient();
 
 export const appRouter = router({
-  example: exampleRouter,
   pokemonPair: publicProcedure.query(async ({ ctx }) => {
     const [id1, id2] = getOptionsForVote();
 
