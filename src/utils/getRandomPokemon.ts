@@ -17,7 +17,7 @@ export type pokemonPair = {
 }[];
 export const getOptionsForVote: () => pokemonPair = () => {
   const firstId = getRandomPokemon();
-  return pokemons.filter(
-    (el) => el.id == firstId || el.id == getRandomPokemon(firstId)
-  );
+  const secondId = getRandomPokemon(firstId);
+
+  return pokemons.filter((el) => el.id == firstId || el.id == secondId);
 };

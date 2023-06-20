@@ -2,11 +2,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
-import { PokemonClient } from "pokenode-ts";
-
-import { getOptionsForVote } from "../../../utils/getRandomPokemon";
-const api = new PokemonClient();
-
 export const appRouter = router({
   pokemonVoteUpdate: publicProcedure
     .input(z.object({ votedFor: z.number(), votedAgainst: z.number() }))
