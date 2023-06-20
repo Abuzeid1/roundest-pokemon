@@ -3,34 +3,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import type { Pokemon } from "@prisma/client";
+import { getOptionsForVote, type pokemonPair } from "../utils/getRandomPokemon";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const voteMutation = trpc.pokemonVoteUpdate.useMutation();
-  const {
-    data: pokemonPair,
-    refetch,
-    isFetching,
-  } = trpc.pokemonPair.useQuery(undefined, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
 
-  const voteForRoundest: (num: number | undefined) => void = (num) => {
-    if (!pokemonPair?.firstPokemon || !pokemonPair.secondPokemon) return;
+  const [pokemonPair, setPokemonPair] = useState<pokemonPair>();
 
-    if (num === pokemonPair?.firstPokemon?.id) {
-      voteMutation.mutate({
-        votedFor: pokemonPair.firstPokemon.id,
-        votedAgainst: pokemonPair?.secondPokemon.id,
-      });
-    } else {
-      voteMutation.mutate({
-        votedFor: pokemonPair.firstPokemon.id,
-        votedAgainst: pokemonPair?.secondPokemon.id,
-      });
-    }
-    refetch();
+  useEffect(() => {
+    setPokemonPair(getOptionsForVote());
+  }, []);
+
+  const voteForRoundest: (
+    firstId: number | undefined,
+    secondId: number | undefined
+  ) => void = (firstId, secondId) => {
+    if (!firstId || !secondId) return;
+
+    voteMutation.mutate({
+      votedFor: firstId,
+      votedAgainst: secondId,
+    });
+    setPokemonPair(getOptionsForVote());
+    console.log(5);
   };
 
   return (
@@ -41,21 +37,25 @@ const Home: NextPage = () => {
           which pokémon is rounder
         </div>
 
-        <div className="mt-auto flex  w-[95%] max-w-xl items-center justify-between max-sm:flex-col">
-          <PokemonListing
-            pokemon={pokemonPair?.firstPokemon}
-            vote={() => voteForRoundest(pokemonPair?.firstPokemon?.id)}
-            disabled={isFetching}
-          />
+        {pokemonPair && (
+          <div className="mt-auto flex  w-[95%] max-w-xl items-center justify-between max-sm:flex-col">
+            <PokemonListing
+              pokemon={pokemonPair[0]}
+              vote={() =>
+                voteForRoundest(pokemonPair[0]?.id, pokemonPair[1]?.id)
+              }
+            />
 
-          <div className="max-sm:py-11">vs</div>
+            <div className="max-sm:py-11">vs</div>
 
-          <PokemonListing
-            pokemon={pokemonPair?.secondPokemon}
-            vote={() => voteForRoundest(pokemonPair?.secondPokemon?.id)}
-            disabled={isFetching}
-          />
-        </div>
+            <PokemonListing
+              pokemon={pokemonPair[1]}
+              vote={() =>
+                voteForRoundest(pokemonPair[1]?.id, pokemonPair[0]?.id)
+              }
+            />
+          </div>
+        )}
         <Link className="mt-auto pb-7 max-sm:pt-16" href="/results">
           Results
         </Link>
@@ -69,17 +69,14 @@ export default Home;
 const PokemonListing: React.FC<{
   pokemon: Pokemon | undefined;
   vote: () => void;
-  disabled: boolean;
-}> = ({ pokemon, vote, disabled }) => {
+}> = ({ pokemon, vote }) => {
   return (
     <>
-      {disabled ? (
+      {!pokemon ? (
         <Spinner />
       ) : (
         <div
-          className={`flex w-[40%] flex-col items-center ${
-            disabled && "opacity-0"
-          } max-sm:w-[100%] max-sm:max-w-[15rem]`}
+          className={`flex w-[40%] flex-col items-center max-sm:w-[100%] max-sm:max-w-[15rem]`}
         >
           <div className="text-center text-lg capitalize sm:text-2xl">
             {pokemon?.name}
