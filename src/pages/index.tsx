@@ -7,9 +7,8 @@ import { getOptionsForVote, type pokemonPair } from "../utils/getRandomPokemon";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
-  const voteMutation = trpc.pokemonVoteUpdate.useMutation();
-
   const [pokemonPair, setPokemonPair] = useState<pokemonPair>();
+  const voteMutation = trpc.pokemonVoteUpdate.useMutation();
 
   useEffect(() => {
     setPokemonPair(getOptionsForVote());
@@ -26,14 +25,12 @@ const Home: NextPage = () => {
       votedAgainst: secondId,
     });
     setPokemonPair(getOptionsForVote());
-    console.log(5);
   };
 
   return (
     <>
       <main className=" flex min-h-[40rem] w-screen flex-col items-center justify-center text-gray-50 sm:h-screen  ">
         <div className="mt-7 text-center max-sm:mb-20">
-          {" "}
           which pokémon is rounder
         </div>
 

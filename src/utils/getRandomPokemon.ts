@@ -1,13 +1,12 @@
-import { type } from "os";
 import pokemons from "./pokemons";
 
 const MAX_DEX_id = 493;
 export const getRandomPokemon: (notThisOne?: number) => number = (
   notThisOne
 ) => {
-  const pokedexNumber = Math.floor(Math.random() * MAX_DEX_id + 1);
+  const pokemonId = Math.floor(Math.random() * MAX_DEX_id + 1);
 
-  if (pokedexNumber != notThisOne) return pokedexNumber;
+  if (pokemonId != notThisOne) return pokemonId;
   return getRandomPokemon(notThisOne);
 };
 
@@ -18,6 +17,7 @@ export type pokemonPair = {
 }[];
 export const getOptionsForVote: () => pokemonPair = () => {
   const firstId = getRandomPokemon();
-  const secondId = getRandomPokemon(firstId);
-  return pokemons.filter((el) => el.id == firstId || el.id == secondId);
+  return pokemons.filter(
+    (el) => el.id == firstId || el.id == getRandomPokemon(firstId)
+  );
 };
