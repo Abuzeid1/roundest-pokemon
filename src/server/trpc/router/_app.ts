@@ -8,19 +8,6 @@ import { getOptionsForVote } from "../../../utils/getRandomPokemon";
 const api = new PokemonClient();
 
 export const appRouter = router({
-  pokemonPair: publicProcedure.query(async ({ ctx }) => {
-    const [id1, id2] = getOptionsForVote();
-
-    const pokemonPair = await ctx.prisma.pokemon.findMany({
-      where: { OR: [{ id: id1 }, { id: id2 }] },
-    });
-    if (!pokemonPair) throw new Error("lol doesn't exist");
-
-    const [firstPokemon, secondPokemon] = pokemonPair;
-
-    return { firstPokemon, secondPokemon };
-  }),
-
   pokemonVoteUpdate: publicProcedure
     .input(z.object({ votedFor: z.number(), votedAgainst: z.number() }))
     .mutation(async ({ input, ctx }) => {
