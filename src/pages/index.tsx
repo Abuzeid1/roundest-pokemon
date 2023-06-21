@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import type { Pokemon } from "@prisma/client";
-import { getOptionsForVote, type pokemonPair } from "../utils/getRandomPokemon";
+import { getPokemonPair, type pokemonPair } from "../utils/getRandomPokemon";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
@@ -11,47 +11,48 @@ const Home: NextPage = () => {
   const voteMutation = trpc.pokemonVoteUpdate.useMutation();
 
   useEffect(() => {
-    setPokemonPair(getOptionsForVote());
+    setPokemonPair(getPokemonPair());
   }, []);
 
-  const voteForRoundest: (
-    firstId: number | undefined,
-    secondId: number | undefined
-  ) => void = (firstId, secondId) => {
-    if (!firstId || !secondId) return;
-
+  const voteForRoundest: (firstId: number, secondId: number) => void = (
+    firstId,
+    secondId
+  ) => {
     voteMutation.mutate({
       votedFor: firstId,
       votedAgainst: secondId,
     });
-    setPokemonPair(getOptionsForVote());
+
+    setPokemonPair(getPokemonPair());
   };
 
   return (
     <>
-      <main className=" flex min-h-[40rem] w-screen flex-col items-center justify-center text-gray-50 sm:h-screen  ">
+      <main className=" flex min-h-[40rem] w-screen flex-col items-center text-gray-50 sm:h-screen  ">
         <div className="mt-7 text-center max-sm:mb-20">
           which pokémon is rounder
         </div>
 
-        {pokemonPair && (
+        {pokemonPair ? (
           <div className="mt-auto flex  w-[95%] max-w-xl items-center justify-between max-sm:flex-col">
             <PokemonListing
-              pokemon={pokemonPair[0]}
+              pokemon={pokemonPair.first}
               vote={() =>
-                voteForRoundest(pokemonPair[0]?.id, pokemonPair[1]?.id)
+                voteForRoundest(pokemonPair.first.id, pokemonPair.second?.id)
               }
             />
 
             <div className="max-sm:py-11">vs</div>
 
             <PokemonListing
-              pokemon={pokemonPair[1]}
+              pokemon={pokemonPair.second}
               vote={() =>
-                voteForRoundest(pokemonPair[1]?.id, pokemonPair[0]?.id)
+                voteForRoundest(pokemonPair.second.id, pokemonPair.first?.id)
               }
             />
           </div>
+        ) : (
+          <Spinner />
         )}
         <Link className="mt-auto pb-7 max-sm:pt-16" href="/results">
           Results
@@ -69,36 +70,32 @@ const PokemonListing: React.FC<{
 }> = ({ pokemon, vote }) => {
   return (
     <>
-      {!pokemon ? (
-        <Spinner />
-      ) : (
-        <div
-          className={`flex w-[40%] flex-col items-center max-sm:w-[100%] max-sm:max-w-[15rem]`}
-        >
-          <div className="text-center text-lg capitalize sm:text-2xl">
-            {pokemon?.name}
-          </div>
-
-          <Image
-            priority={true}
-            width={256}
-            height={256}
-            placeholder={"empty"}
-            src={pokemon?.spriteUrl as string}
-            className="w-full"
-            alt="pokemon"
-            style={{ imageRendering: "pixelated" }}
-          />
-          <button
-            className="focus:ring:offset-2  mx-auto mt-5 rounded-full border border-gray-300 bg-white px-2.5 py-1.5 text-lg font-medium text-gray-700 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-sm:text-sm"
-            onClick={() => {
-              vote();
-            }}
-          >
-            Rounder
-          </button>
+      <div
+        className={`flex w-2/5 flex-col  max-sm:w-[100%] max-sm:max-w-[15rem]`}
+      >
+        <div className="text-center text-lg capitalize sm:text-2xl">
+          {pokemon?.name}
         </div>
-      )}
+
+        <Image
+          priority={true}
+          width={256}
+          height={256}
+          placeholder={"empty"}
+          src={pokemon?.spriteUrl as string}
+          className="w-full"
+          alt="pokemon"
+          style={{ imageRendering: "pixelated" }}
+        />
+        <button
+          className="focus:ring:offset-2  mx-auto mt-5 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-lg font-medium text-gray-700 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-sm:text-sm"
+          onClick={() => {
+            vote();
+          }}
+        >
+          Rounder
+        </button>
+      </div>
     </>
   );
 };

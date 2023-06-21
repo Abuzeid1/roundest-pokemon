@@ -1,23 +1,27 @@
 import pokemons from "./pokemons";
-
+import { z } from "zod";
+import type { Pokemon } from "@prisma/client";
 const MAX_DEX_id = 493;
-export const getRandomPokemon: (notThisOne?: number) => number = (
+
+const pokemonSchema = z.object({
+  id: z.number(),
+  spriteUrl: z.string(),
+  name: z.string(),
+});
+
+export const getRandomPokemon: (notThisOne?: Pokemon) => Pokemon = (
   notThisOne
 ) => {
   const pokemonId = Math.floor(Math.random() * MAX_DEX_id + 1);
 
-  if (pokemonId != notThisOne) return pokemonId;
+  if (pokemonId != notThisOne?.id)
+    return pokemonSchema.parse(pokemons.find((el) => el.id == pokemonId));
   return getRandomPokemon(notThisOne);
 };
 
-export type pokemonPair = {
-  name: string;
-  spriteUrl: string;
-  id: number;
-}[];
-export const getOptionsForVote: () => pokemonPair = () => {
-  const firstId = getRandomPokemon();
-  const secondId = getRandomPokemon(firstId);
+export type pokemonPair = { first: Pokemon; second: Pokemon };
+export const getPokemonPair: () => pokemonPair = () => {
+  const first = getRandomPokemon();
 
-  return pokemons.filter((el) => el.id == firstId || el.id == secondId);
+  return { first, second: getRandomPokemon(first) };
 };
