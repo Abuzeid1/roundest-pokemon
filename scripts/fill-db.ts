@@ -7,12 +7,12 @@ const doBackfill = async () => {
     const allPokemon = await pokeApi.listPokemons(0, 493);
 
     const formattedPokemon = allPokemon.results.map((p, index) => ({
-        id: index+1,
-        name: (p as {name:string}).name,
-        spriteUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
+        id: index + 1,
+        name: (p as { name: string }).name,
+        spriteUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`
     }))
 
 
-    return   prisma.pokemon.createMany({data: formattedPokemon})
+    return prisma.pokemon.createMany({ data: formattedPokemon })
 }
 export default doBackfill;
