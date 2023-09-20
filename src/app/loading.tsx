@@ -1,7 +1,7 @@
-export default function Spinner()  {
+export default function Loading() {
   return (
-    <>
-      <div className="mx-auto " role="status">
+    <div className="flex h-full">
+      <div className="m-auto " role="status">
         <svg
           aria-hidden="true"
           className="mr-2 h-8 w-8  animate-spin fill-gray-50 text-gray-600"
@@ -20,6 +20,6 @@ export default function Spinner()  {
         </svg>
         <span className="sr-only">Loading...</span>
       </div>
-    </>
+    </div>
   );
-};
+}

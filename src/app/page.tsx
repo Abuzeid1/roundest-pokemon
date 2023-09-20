@@ -1,9 +1,9 @@
 import { getPokemonPair } from "../utils/getRandomPokemon";
 import PokemonListing from "./PokemonListing";
-import Spinner from "./Spinner";
+import Link from "next/link";
 
-export default async function Home() {
-  const pokemonPair = await getPokemonPair();
+export default function Home() {
+  const pokemonPair = getPokemonPair();
 
   return (
     <>
@@ -11,23 +11,22 @@ export default async function Home() {
         which pokémon is rounder
       </div>
 
-      {pokemonPair ? (
-        <div className="mt-auto flex  w-[95%] max-w-xl items-center justify-between max-sm:flex-col">
-          <PokemonListing
-            pokemon={pokemonPair.first}
-            secondId={pokemonPair.second.id}
-          />
+      <div className="mt-auto flex  w-[95%] max-w-xl items-center justify-between max-sm:flex-col">
+        <PokemonListing
+          pokemon={pokemonPair.first}
+          secondId={pokemonPair.second.id}
+        />
 
-          <div className="max-sm:py-11">vs</div>
+        <div className="max-sm:py-11">vs</div>
 
-          <PokemonListing
-            pokemon={pokemonPair.second}
-            secondId={pokemonPair.first.id}
-          />
-        </div>
-      ) : (
-        <Spinner />
-      )}
+        <PokemonListing
+          pokemon={pokemonPair.second}
+          secondId={pokemonPair.first.id}
+        />
+      </div>
+      <Link className="mt-auto pb-7 max-sm:pt-16" href="/results">
+        Results
+      </Link>
     </>
   );
 }
