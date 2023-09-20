@@ -1,10 +1,10 @@
-import { NextPage, InferGetServerSidePropsType } from "next";
-import { prisma } from "../server/db/client";
+import "server-only";
+import { prisma } from "../../server/db/client";
 import Image from "next/image";
 
-const ResultPage: NextPage<
-  InferGetServerSidePropsType<typeof getStaticProps>
-> = ({ pokemonScores }) => {
+export default async function ResultPage() {
+  const pokemonScores = await getPokemonScores();
+
   return (
     <div className="p-5 text-gray-50">
       <h1 className="my-10 text-center text-5xl ">Results</h1>
@@ -15,7 +15,7 @@ const ResultPage: NextPage<
               key={id}
               className="relative mx-auto grid  w-full max-w-2xl grid-cols-[1fr_1fr_.5fr] items-center border text-left max-sm:text-sm sm:grid-cols-[1fr_1fr_.5fr_.5fr_.5fr] sm:gap-2 sm:p-2 sm:px-7 sm:text-2xl"
             >
-              <span className="absolute top-0 left-0 rounded-br-lg bg-gray-200 p-2 text-gray-700 max-sm:p-1">
+              <span className="absolute left-0 top-0 rounded-br-lg bg-gray-200 p-2 text-gray-700 max-sm:p-1">
                 {index + 1}
               </span>
               <Image
@@ -38,10 +38,8 @@ const ResultPage: NextPage<
       </ul>
     </div>
   );
-};
-export default ResultPage;
-
-export const getStaticProps = async () => {
+}
+async function getPokemonScores() {
   const pokemonCollection = await prisma.pokemon.findMany({
     orderBy: {
       VoteFor: { _count: "desc" },
@@ -75,5 +73,8 @@ export const getStaticProps = async () => {
     (a, b) => b.score - a.score || a.name.charCodeAt(0) - b.name.charCodeAt(0)
   );
 
-  return { props: { pokemonScores }, revalidate: 60 };
-};
+  return pokemonScores;
+}
+
+
+export const dynamic = "force-dynamic";
