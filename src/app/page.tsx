@@ -1,25 +1,24 @@
 "use client";
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+import { useState } from "react";
 import { getPokemonPair, pokemonPair } from "../utils/getRandomPokemon";
 import PokemonListing from "./PokemonListing";
 import Link from "next/link";
 import Loading from "./loading";
 
-export default function Home() {
-  const [pokemonPair, setPokemonPair] = useState<pokemonPair>();
+function Home() {
+  const [pokemonPair, setPokemonPair] = useState<pokemonPair>(getPokemonPair());
   const [isLoading, setIsLoading] = useState(false);
   async function updatePokemonPair() {
     setIsLoading(true);
     setPokemonPair(getPokemonPair());
     setIsLoading(false);
   }
-  useEffect(() => {
-    setPokemonPair(getPokemonPair());
-  }, []);
 
   return (
     <>
-      {!isLoading && pokemonPair ? (
+      {!isLoading ? (
         <>
           <div className="mt-7 text-center max-sm:mb-20">
             which pokémon is rounder
@@ -51,4 +50,6 @@ export default function Home() {
   );
 }
 
-export const dynamic = "force-dynamic";
+export default dynamic(() => Promise.resolve(Home), {
+  ssr: false,
+});
