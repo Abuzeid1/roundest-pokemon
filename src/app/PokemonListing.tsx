@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { prisma } from "../server/db/client";
 
-export default async function PokemonListing({
+export default function PokemonListing({
   pokemon,
   secondId,
 }: {

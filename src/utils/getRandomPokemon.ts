@@ -10,7 +10,7 @@ const pokemonSchema = z.object({
 });
 
 export const getRandomPokemon: (notThisOne?: Pokemon) => Pokemon = (
-  notThisOne
+  notThisOne,
 ) => {
   const pokemonId = Math.floor(Math.random() * MAX_DEX_id + 1);
 
