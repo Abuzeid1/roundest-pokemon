@@ -1,30 +1,19 @@
 import { Pokemon } from "@prisma/client";
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
-
-import { prisma } from "../server/db/client";
+import voteForRoundest from "./voteServerAction";
 
 export default function PokemonListing({
   pokemon,
   secondId,
+  updatePokemonPair,
 }: {
   pokemon: Pokemon;
   secondId: number;
+  updatePokemonPair: () => void;
 }) {
-  async function voteForRoundest() {
-    "use server";
-    revalidatePath("./");
-
-    try {
-      await prisma.vote.create({
-        data: {
-          votedForId: pokemon.id,
-          votedAgainstId: secondId,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  function handelClick() {
+    updatePokemonPair();
+    voteForRoundest(pokemon.id, secondId);
   }
   return (
     <>
@@ -46,11 +35,12 @@ export default function PokemonListing({
           style={{ imageRendering: "pixelated" }}
         />
 
-        <form action={voteForRoundest} className=" mx-auto">
-          <button className="focus:ring:offset-2  mt-5 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-lg font-medium text-gray-700 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-sm:text-sm">
-            Rounder
-          </button>
-        </form>
+        <button
+          onClick={handelClick}
+          className="focus:ring:offset-2 mx-auto  mt-5 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-lg font-medium text-gray-700 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-sm:text-sm"
+        >
+          Rounder
+        </button>
       </div>
     </>
   );
